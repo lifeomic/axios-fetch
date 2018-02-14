@@ -1,5 +1,8 @@
-Summary
-=======
+Axios-Fetch
+===========
+[![Greenkeeper badge](https://badges.greenkeeper.io/lifeomic/axios-fetch.svg)](https://greenkeeper.io/)
+[![Build Status](https://travis-ci.org/lifeomic/axios-fetch.svg?branch=master)](https://travis-ci.org/lifeomic/axios-fetch)
+[![Coverage Status](https://coveralls.io/repos/github/lifeomic/axios-fetch/badge.svg?branch=master)](https://coveralls.io/github/lifeomic/axios-fetch?branch=master)
 
 This library exposes a Fetch WebAPI implementation backed by a Axios client
 instance. This allows a bridge between projects that have pre-configured Axios
