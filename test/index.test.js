@@ -12,7 +12,7 @@ function cannonicalizeHeaders (headers) {
     if (Array.isArray(value) && value.length === 1) {
       return value[0];
     } else {
-      // All headers should be strings, but nock seems to 
+      // All headers should be strings, but nock seems to
       // sometimes provide integer values for headers like
       // content-length
       return String(value);
@@ -97,6 +97,23 @@ test('handles text body init options', async function (test) {
   const init = {
     method: 'POST',
     body: 'some text'
+  };
+  const {expectedResponse, axiosResponse} = await dualFetch(`${TEST_URL_ROOT}/body`, init);
+
+  const expectedBody = await expectedResponse.json();
+  const axiosBody = await axiosResponse.json();
+  test.deepEqual(axiosBody.body, expectedBody.body);
+  test.deepEqual(axiosBody.headers['content-length'], expectedBody.headers['content-length']);
+  test.deepEqual(axiosBody.headers['content-type'], expectedBody.headers['content-type']);
+});
+
+test('handles text body with content-type init options', async function (test) {
+  const init = {
+    method: 'POST',
+    body: '{}',
+    headers: {
+      'Content-Type': 'application/json'
+    }
   };
   const {expectedResponse, axiosResponse} = await dualFetch(`${TEST_URL_ROOT}/body`, init);
 

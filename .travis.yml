@@ -1,0 +1,16 @@
+language: node_js
+node_js:
+  - "8"
+  - "9"
+script:
+  - yarn test
+
+after_success: yarn coverage
+
+env:
+  - DELAY_TOLERANCE=100
+
+notifications:
+  email:
+    on_success: never
+    on_failure: always

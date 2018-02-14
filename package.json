@@ -4,7 +4,13 @@
   "description": "A WebAPI Fetch implementation backed by an Axios client",
   "main": "src/index.js",
   "scripts": {
-    "test": "ava"
+    "test": "nyc ava",
+    "lint": "eslint .",
+    "pretest": "yarn lint",
+    "coverage": "nyc report --reporter=text-lcov | coveralls"
+  },
+  "engines": {
+    "node": ">=8"
   },
   "keywords": [
     "fetch",
@@ -15,10 +21,29 @@
   "devDependencies": {
     "ava": "^0.25.0",
     "axios": "^0.17.1",
+    "coveralls": "^3.0.0",
+    "eslint": "^4.17.0",
+    "eslint-config-semistandard": "^12.0.0",
+    "eslint-config-standard": "^11.0.0-beta.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-lodash": "^2.6.1",
+    "eslint-plugin-node": "^6.0.0",
+    "eslint-plugin-promise": "^3.6.0",
+    "eslint-plugin-security": "^1.4.0",
+    "eslint-plugin-standard": "^3.0.1",
     "lodash": "^4.17.5",
-    "nock": "^9.1.6"
+    "nock": "^9.1.6",
+    "nyc": "^11.4.1"
   },
   "dependencies": {
     "node-fetch": "^2.0.0"
+  },
+  "nyc": {
+    "check-coverage": true,
+    "per-file": true,
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 100
   }
 }

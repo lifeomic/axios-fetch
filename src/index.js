@@ -1,4 +1,4 @@
-const { Response, Headers, Request } = require('node-fetch');
+const { Response, Headers } = require('node-fetch');
 const mapKeys = require('lodash/mapKeys');
 
 /**
@@ -46,4 +46,4 @@ function buildAxiosFetch (axios) {
 
 module.exports = {
   buildAxiosFetch
-}
+};

@@ -1,0 +1,12 @@
+extends:
+  - semistandard
+  - plugin:security/recommended
+plugins:
+  - import
+  - lodash
+  - security
+rules:
+  import/no-extraneous-dependencies: 'error'
+  lodash/import-scope: 'warn'
+  no-var: 'error'
+  prefer-const: 'error'
