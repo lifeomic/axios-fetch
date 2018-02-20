@@ -3,12 +3,17 @@ node_js:
   - "8"
   - "9"
 script:
-  - yarn test
+  - yarn install axios@^${AXIOS_VERSION} && yarn test
 
 after_success: yarn coverage
 
 env:
-  - DELAY_TOLERANCE=100
+  - AXIOS_VERSION=v0.13
+  - AXIOS_VERSION=v0.14
+  - AXIOS_VERSION=v0.15
+  - AXIOS_VERSION=v0.16
+  - AXIOS_VERSION=v0.17
+  - AXIOS_VERSION=v0.18
 
 notifications:
   email:
