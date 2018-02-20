@@ -3,7 +3,7 @@ node_js:
   - "8"
   - "9"
 script:
-  - yarn install axios@^${AXIOS_VERSION} && yarn test
+  - yarn add --dev axios@^${AXIOS_VERSION} && yarn test
 
 after_success: yarn coverage
 
