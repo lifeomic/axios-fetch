@@ -1,22 +1,27 @@
 language: node_js
 node_js:
-  - "8"
-  - "9"
-  - "10"
+- '8'
+- '9'
+- '10'
 script:
-  - yarn add --dev axios@^${AXIOS_VERSION} && yarn test
-
+- yarn add --dev axios@^${AXIOS_VERSION} && yarn test
 after_success: yarn coverage
-
 env:
-  - AXIOS_VERSION=v0.13
-  - AXIOS_VERSION=v0.14
-  - AXIOS_VERSION=v0.15
-  - AXIOS_VERSION=v0.16
-  - AXIOS_VERSION=v0.17
-  - AXIOS_VERSION=v0.18
-
+- AXIOS_VERSION=v0.13
+- AXIOS_VERSION=v0.14
+- AXIOS_VERSION=v0.15
+- AXIOS_VERSION=v0.16
+- AXIOS_VERSION=v0.17
+- AXIOS_VERSION=v0.18
 notifications:
   email:
     on_success: never
     on_failure: always
+deploy:
+  provider: npm
+  email: $NPM_EMAIL
+  api_key: $NPM_KEY
+  on:
+    tags: true
+    repo: lifeomic/axios-fetch
+    node: '8'
