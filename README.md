@@ -14,11 +14,10 @@ project has an existing Axios client configured, then this project can help you
 use that client in your apollo-link-http instance. Here is some sample code:
 
 ```javascript
-const { buildAxiosFetch } = require("axios-fetch");
+const { buildAxiosFetch } = require("@lifeomic/axios-fetch");
 const { createHttpLink } = require("apollo-link-http");
 const link = createHttpLink({
   uri: "/graphql"
   fetch: buildAxiosFetch(yourAxiosInstance)
 });
 ```
-  
