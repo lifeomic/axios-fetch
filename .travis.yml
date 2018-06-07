@@ -6,6 +6,9 @@ node_js:
 script:
 - yarn add --dev axios@^${AXIOS_VERSION} && yarn test
 after_success: yarn coverage
+before_install: yarn global add greenkeeper-lockfile@1
+before_script: greenkeeper-lockfile-update
+after_script: greenkeeper-lockfile-upload
 env:
 - AXIOS_VERSION=v0.13
 - AXIOS_VERSION=v0.14
