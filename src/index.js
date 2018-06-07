@@ -1,11 +1,13 @@
 const { Response, Headers } = require('node-fetch');
 const mapKeys = require('lodash/mapKeys');
+const identity = require('lodash/identity');
 
 /**
  * A Fetch WebAPI implementation based on the Axios client
  */
-async function axiosFetch (axios, input, init = {}) {
+async function axiosFetch (axios, transfomer, input, init = {}) {
   // Convert the `fetch` style arguments into a Axios style config
+  transfomer = transfomer || identity;
 
   const lowerCasedHeaders = mapKeys(init.headers, function (value, key) {
     return key.toLowerCase();
@@ -15,13 +17,13 @@ async function axiosFetch (axios, input, init = {}) {
     lowerCasedHeaders['content-type'] = 'text/plain;charset=UTF-8';
   }
 
-  const config = {
+  const config = transfomer({
     url: input,
     method: init.method || 'GET',
     data: String(init.body),
     headers: lowerCasedHeaders,
     validateStatus: () => true
-  };
+  });
 
   const result = await axios.request(config);
 
@@ -40,8 +42,8 @@ async function axiosFetch (axios, input, init = {}) {
   });
 }
 
-function buildAxiosFetch (axios) {
-  return axiosFetch.bind(undefined, axios);
+function buildAxiosFetch (axios, transformer) {
+  return axiosFetch.bind(undefined, axios, transformer);
 }
 
 module.exports = {
