@@ -21,3 +21,17 @@ const link = createHttpLink({
   fetch: buildAxiosFetch(yourAxiosInstance)
 });
 ```
+
+Transforming requests
+---------------------
+It is possible to transform requests before they reach your Axios client by providing
+an optional argument to `buildAxiosFetch`. For example, if you wanted a fetch implementation
+that always set the request timeout to 1 second, you could use code like:
+
+```javascript
+const { buildAxiosFetch } = require("@lifeomic/axios-fetch");
+const fetch = buildAxiosFetch(yourAxiosInstance, function (config) {
+  config.timeout = 1000;
+  return config;
+});
+```

@@ -4,6 +4,7 @@ const fetch = require('node-fetch');
 const {buildAxiosFetch} = require('../src/index');
 const mapValues = require('lodash/mapValues');
 const axios = require('axios');
+const sinon = require('sinon');
 
 const TEST_URL_ROOT = 'https://localhost:1234';
 
@@ -155,4 +156,31 @@ test('returns the expected response body on a failure', async function (test) {
   const axiosBody = await axiosResponse.text();
   test.deepEqual(axiosBody, expectedBody);
   test.deepEqual(axiosResponse.headers, expectedResponse.headers);
+});
+
+test('allows transforming request options', async function (test) {
+  const originalUrl = `${TEST_URL_ROOT}/success/text`;
+  const transformedUrl = `${TEST_URL_ROOT}/success/json`;
+
+  let newConfig;
+  const transformer = sinon.stub().callsFake(function (config) {
+    newConfig = Object.create(config);
+    newConfig.url = transformedUrl;
+    return newConfig;
+  });
+
+  const client = axios.create();
+  const requestSpy = sinon.spy(client, 'request');
+
+  const axiosFetch = buildAxiosFetch(client, transformer);
+
+  await axiosFetch(originalUrl);
+
+  // Make sure that the tranformer was called and a new config
+  // was created
+  test.truthy(newConfig);
+
+  sinon.assert.calledOnce(requestSpy);
+  sinon.assert.calledOn(requestSpy, client);
+  sinon.assert.calledWithExactly(requestSpy, newConfig);
 });
