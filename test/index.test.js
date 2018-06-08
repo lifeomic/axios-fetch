@@ -174,13 +174,16 @@ test('allows transforming request options', async function (test) {
 
   const axiosFetch = buildAxiosFetch(client, transformer);
 
-  await axiosFetch(originalUrl);
+  const init = {extra: 'options'};
+  await axiosFetch(originalUrl, init);
 
-  // Make sure that the tranformer was called and a new config
-  // was created
-  test.truthy(newConfig);
+  // Make sure the transformer was called with the expected arguments
+  test.is(transformer.callCount, 1, 'transformer call count');
+  sinon.assert.calledOn(transformer, undefined);
+  sinon.assert.calledWithExactly(transformer, sinon.match.object, originalUrl, init);
 
-  sinon.assert.calledOnce(requestSpy);
+  // Make sure that the Axio client received the transformed config object
+  test.is(requestSpy.callCount, 1, 'request call count');
   sinon.assert.calledOn(requestSpy, client);
   sinon.assert.calledWithExactly(requestSpy, newConfig);
 });

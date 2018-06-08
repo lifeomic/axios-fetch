@@ -23,7 +23,7 @@ async function axiosFetch (axios, transfomer, input, init = {}) {
     data: String(init.body),
     headers: lowerCasedHeaders,
     validateStatus: () => true
-  });
+  }, input, init);
 
   const result = await axios.request(config);
 
