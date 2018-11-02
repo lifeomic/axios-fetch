@@ -5,6 +5,7 @@ const {buildAxiosFetch} = require('../src/index');
 const mapValues = require('lodash/mapValues');
 const axios = require('axios');
 const sinon = require('sinon');
+const FormData = require('form-data');
 
 const TEST_URL_ROOT = 'https://localhost:1234';
 
@@ -139,6 +140,32 @@ test('handles json body init options', async function (test) {
 
   test.deepEqual(axiosBody.body, expectedBody.body);
   test.deepEqual(axiosBody.headers['content-type'], expectedBody.headers['content-type']);
+});
+
+test('returns the expected response on a multipart request', async function (test) {
+  const data = new FormData();
+  data.append('key', 'value');
+  const init = {
+    method: 'POST',
+    body: data
+  };
+
+  const input = `${TEST_URL_ROOT}/body`;
+  const expectedResponse = await fetch(input, init);
+
+  // FormData is a stream in Node, so you can't reuse it. Make a copy instead.
+  const dataCopy = new FormData();
+  dataCopy._boundary = data._boundary;
+  dataCopy.append('key', 'value');
+  init.body = dataCopy;
+
+  const axiosFetch = buildAxiosFetch(axios);
+  const axiosResponse = await axiosFetch(input, init);
+
+  const expectedBody = await expectedResponse.json();
+  const axiosBody = await axiosResponse.json();
+
+  test.deepEqual(axiosBody.body, expectedBody.body);
 });
 
 test('returns the expected response on HTTP status code failures', async function (test) {

@@ -29,6 +29,7 @@
     "sinon": "^6.0.0"
   },
   "dependencies": {
+    "form-data": "^2.3.3",
     "lodash": "^4.17.5",
     "node-fetch": "^2.0.0"
   },

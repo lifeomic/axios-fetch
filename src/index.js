@@ -1,6 +1,7 @@
 const { Response, Headers } = require('node-fetch');
 const mapKeys = require('lodash/mapKeys');
 const identity = require('lodash/identity');
+const FormData = require('form-data');
 
 /**
  * A Fetch WebAPI implementation based on the Axios client
@@ -20,7 +21,7 @@ async function axiosFetch (axios, transfomer, input, init = {}) {
   const config = transfomer({
     url: input,
     method: init.method || 'GET',
-    data: String(init.body),
+    data: init.body instanceof FormData ? init.body : String(init.body),
     headers: lowerCasedHeaders,
     validateStatus: () => true
   }, input, init);
