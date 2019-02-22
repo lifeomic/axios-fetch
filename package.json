@@ -20,13 +20,13 @@
   "license": "MIT",
   "devDependencies": {
     "@lifeomic/eslint-plugin-node": "^1.1.1",
-    "ava": "^0.25.0",
+    "ava": "^1.2.1",
     "axios": "0.13 - 0.18.*",
     "coveralls": "^3.0.0",
     "eslint": "^5.0.0",
     "nock": "^10.0.0",
-    "nyc": "^12.0.1",
-    "sinon": "^6.0.0"
+    "nyc": "^13.3.0",
+    "sinon": "^7.2.4"
   },
   "dependencies": {
     "form-data": "^2.3.3",
