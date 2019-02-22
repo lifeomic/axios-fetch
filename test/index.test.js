@@ -1,4 +1,4 @@
-const {test} = require('ava');
+const test = require('ava');
 const nock = require('nock');
 const fetch = require('node-fetch');
 const {buildAxiosFetch} = require('../src/index');
