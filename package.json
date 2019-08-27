@@ -1,6 +1,6 @@
 {
   "name": "@lifeomic/axios-fetch",
-  "version": "1.4.0",
+  "version": "1.4.1-alpha",
   "description": "A WebAPI Fetch implementation backed by an Axios client",
   "main": "src/index.js",
   "scripts": {
@@ -19,7 +19,7 @@
   "author": "LifeOmic <development@lifeomic.com>",
   "license": "MIT",
   "devDependencies": {
-    "@lifeomic/eslint-plugin-node": "^1.1.1",
+    "@lifeomic/eslint-plugin-node": "^2.0.1",
     "ava": "^2.0.0",
     "axios": "0.19.0",
     "coveralls": "^3.0.0",
