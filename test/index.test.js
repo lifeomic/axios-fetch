@@ -1,7 +1,7 @@
 const test = require('ava');
 const nock = require('nock');
 const fetch = require('node-fetch');
-const {buildAxiosFetch} = require('../src/index');
+const { buildAxiosFetch } = require('../src/index');
 const mapValues = require('lodash/mapValues');
 const axios = require('axios');
 const sinon = require('sinon');
@@ -29,7 +29,7 @@ test.before(function (test) {
     .get('/success/text')
     .reply(200, 'OK!')
     .get('/success/json')
-    .reply(200, {value: 'OK!'})
+    .reply(200, { value: 'OK!' })
     .post('/headers')
     .reply(200, function () {
       return cannonicalizeHeaders(this.req.headers);
@@ -44,7 +44,7 @@ test.before(function (test) {
     .get('/failure')
     .reply(501)
     .get('/failureBody')
-    .reply(400, {test: true});
+    .reply(400, { test: true });
 });
 
 async function dualFetch (input, init) {
@@ -52,11 +52,11 @@ async function dualFetch (input, init) {
   const axiosFetch = buildAxiosFetch(axios);
   const axiosResponse = await axiosFetch(input, init);
 
-  return {expectedResponse, axiosResponse};
+  return { expectedResponse, axiosResponse };
 }
 
 test('returns the expected response on success', async function (test) {
-  const {expectedResponse, axiosResponse} = await dualFetch(`${TEST_URL_ROOT}/success/text`);
+  const { expectedResponse, axiosResponse } = await dualFetch(`${TEST_URL_ROOT}/success/text`);
 
   test.truthy(axiosResponse.ok === expectedResponse.ok);
   test.truthy(axiosResponse.status === expectedResponse.status);
@@ -64,7 +64,7 @@ test('returns the expected response on success', async function (test) {
 });
 
 test('returns the expected response on a JSON body', async function (test) {
-  const {expectedResponse, axiosResponse} = await dualFetch(`${TEST_URL_ROOT}/success/json`);
+  const { expectedResponse, axiosResponse } = await dualFetch(`${TEST_URL_ROOT}/success/json`);
 
   const expectedBody = await expectedResponse.json();
   const axiosBody = await axiosResponse.json();
@@ -73,7 +73,7 @@ test('returns the expected response on a JSON body', async function (test) {
 });
 
 test('returns the expected response on a text body', async function (test) {
-  const {expectedResponse, axiosResponse} = await dualFetch(`${TEST_URL_ROOT}/success/text`);
+  const { expectedResponse, axiosResponse } = await dualFetch(`${TEST_URL_ROOT}/success/text`);
 
   const expectedBody = await expectedResponse.text();
   const axiosBody = await axiosResponse.text();
@@ -88,7 +88,7 @@ test('respects the headers init option', async function (test) {
       'testheader': 'test-value'
     }
   };
-  const {expectedResponse, axiosResponse} = await dualFetch(`${TEST_URL_ROOT}/headers`, init);
+  const { expectedResponse, axiosResponse } = await dualFetch(`${TEST_URL_ROOT}/headers`, init);
 
   const expectedBody = await expectedResponse.json();
   const axiosBody = await axiosResponse.json();
@@ -100,7 +100,7 @@ test('handles text body init options', async function (test) {
     method: 'POST',
     body: 'some text'
   };
-  const {expectedResponse, axiosResponse} = await dualFetch(`${TEST_URL_ROOT}/body`, init);
+  const { expectedResponse, axiosResponse } = await dualFetch(`${TEST_URL_ROOT}/body`, init);
 
   const expectedBody = await expectedResponse.json();
   const axiosBody = await axiosResponse.json();
@@ -117,7 +117,7 @@ test('handles text body with content-type init options', async function (test) {
       'Content-Type': 'application/json'
     }
   };
-  const {expectedResponse, axiosResponse} = await dualFetch(`${TEST_URL_ROOT}/body`, init);
+  const { expectedResponse, axiosResponse } = await dualFetch(`${TEST_URL_ROOT}/body`, init);
 
   const expectedBody = await expectedResponse.json();
   const axiosBody = await axiosResponse.json();
@@ -133,7 +133,7 @@ test('handles json body init options', async function (test) {
       test: 'value'
     }
   };
-  const {expectedResponse, axiosResponse} = await dualFetch(`${TEST_URL_ROOT}/body`, init);
+  const { expectedResponse, axiosResponse } = await dualFetch(`${TEST_URL_ROOT}/body`, init);
 
   const expectedBody = await expectedResponse.json();
   const axiosBody = await axiosResponse.json();
@@ -169,7 +169,7 @@ test('returns the expected response on a multipart request', async function (tes
 });
 
 test('returns the expected response on HTTP status code failures', async function (test) {
-  const {expectedResponse, axiosResponse} = await dualFetch(`${TEST_URL_ROOT}/failure`);
+  const { expectedResponse, axiosResponse } = await dualFetch(`${TEST_URL_ROOT}/failure`);
 
   test.truthy(axiosResponse.ok === expectedResponse.ok);
   test.truthy(axiosResponse.status === expectedResponse.status);
@@ -177,7 +177,7 @@ test('returns the expected response on HTTP status code failures', async functio
 });
 
 test('returns the expected response body on a failure', async function (test) {
-  const {expectedResponse, axiosResponse} = await dualFetch(`${TEST_URL_ROOT}/failureBody`);
+  const { expectedResponse, axiosResponse } = await dualFetch(`${TEST_URL_ROOT}/failureBody`);
 
   const expectedBody = await expectedResponse.text();
   const axiosBody = await axiosResponse.text();
@@ -201,7 +201,7 @@ test('allows transforming request options', async function (test) {
 
   const axiosFetch = buildAxiosFetch(client, transformer);
 
-  const init = {extra: 'options'};
+  const init = { extra: 'options' };
   await axiosFetch(originalUrl, init);
 
   // Make sure the transformer was called with the expected arguments
