@@ -10,7 +10,7 @@
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "engines": {
-    "node": ">=8"
+    "node": ">=6"
   },
   "keywords": [
     "fetch",
