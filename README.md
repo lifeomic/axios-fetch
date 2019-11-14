@@ -1,5 +1,5 @@
-Axios-Fetch
-===========
+# Axios-Fetch
+
 [![Greenkeeper badge](https://badges.greenkeeper.io/lifeomic/axios-fetch.svg)](https://greenkeeper.io/)
 [![Build Status](https://travis-ci.org/lifeomic/axios-fetch.svg?branch=master)](https://travis-ci.org/lifeomic/axios-fetch)
 [![Coverage Status](https://coveralls.io/repos/github/lifeomic/axios-fetch/badge.svg?branch=master)](https://coveralls.io/github/lifeomic/axios-fetch?branch=master)
@@ -22,8 +22,8 @@ const link = createHttpLink({
 });
 ```
 
-Transforming requests
----------------------
+## Transforming requests
+
 It is possible to transform requests before they reach your Axios client by providing
 an optional argument to `buildAxiosFetch`. For example, if you wanted a fetch implementation
 that always set the request timeout to 1 second, you could use code like:
