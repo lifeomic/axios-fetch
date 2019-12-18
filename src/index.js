@@ -1,6 +1,6 @@
 const { Response, Headers } = require('node-fetch');
-const mapKeys = require('lodash/mapKeys');
-const identity = require('lodash/identity');
+const mapKeys = require('lodash.mapkeys');
+const identity = require('lodash.identity');
 const FormData = require('form-data');
 
 /**
