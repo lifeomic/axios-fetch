@@ -1,3 +1,5 @@
+require('es6-promise').polyfill();
+require('isomorphic-fetch');
 const { Response, Headers } = require('node-fetch');
 const mapKeys = require('lodash.mapkeys');
 const identity = require('lodash.identity');
