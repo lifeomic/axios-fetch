@@ -35,3 +35,22 @@ const fetch = buildAxiosFetch(yourAxiosInstance, function (config) {
   return config;
 });
 ```
+
+## Support for IE11 
+
+To Support IE11 add following dependencies
+
+```
+ npm install --save isomorphic-fetch
+ npm install --save es6-promise
+```
+
+After adding these dependencies import in index.jsx file at top (Need to import before React)
+
+```javascript
+import * as es6Promise from 'es6-promise';
+import 'isomorphic-fetch';
+
+es6Promise.polyfill(); // below all import end
+```
+
