@@ -23,20 +23,19 @@ async function axiosFetch (axios, transfomer, input, init = {}) {
     method: init.method || 'GET',
     data: init.body instanceof FormData ? init.body : String(init.body),
     headers: lowerCasedHeaders,
-    validateStatus: () => true
+    validateStatus: () => true,
+    // Force the response to a stream type. This matches the node-fetch
+    // behavior. If the response type comes back as a string, then the
+    // Response object will try to guess the content type and add headers that
+    // weren't in the response
+    responseType: 'stream'
   }, input, init);
 
   const result = await axios.request(config);
 
-  // Convert the Axios style response into a `fetch` style response
-  const responseBody = typeof result.data === `object` ? JSON.stringify(result.data) : result.data;
+  const headers = new Headers(result.headers);
 
-  const headers = new Headers();
-  Object.entries(result.headers).forEach(function ([key, value]) {
-    headers.append(key, value);
-  });
-
-  return new Response(responseBody, {
+  return new Response(result.data, {
     status: result.status,
     statusText: result.statusText,
     headers
