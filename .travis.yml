@@ -2,7 +2,7 @@ language: node_js
 node_js:
   - "8"
   - "10"
-  - "11"
+  - "12"
 script:
   - yarn add --dev axios@^${AXIOS_VERSION} && yarn test
 after_success: yarn coverage
@@ -10,7 +10,10 @@ before_install: yarn global add greenkeeper-lockfile@1
 before_script: greenkeeper-lockfile-update
 after_script: greenkeeper-lockfile-upload
 env:
+  - AXIOS_VERSION=v0.17
   - AXIOS_VERSION=v0.18
+  - AXIOS_VERSION=v0.19
+  - AXIOS_VERSION=v0.20
   - AXIOS_VERSION=v0.21
 notifications:
   email:
