@@ -21,7 +21,7 @@ async function axiosFetch (axios, transfomer, input, init = {}) {
   const config = transfomer({
     url: input,
     method: init.method || 'GET',
-    data: init.body instanceof FormData ? init.body : String(init.body),
+    data: typeof init.body === 'undefined' || init.body instanceof FormData ? init.body : String(init.body),
     headers: lowerCasedHeaders,
     validateStatus: () => true,
     // Force the response to an arraybuffer type. Without this, the Response
