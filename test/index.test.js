@@ -214,3 +214,19 @@ test('allows transforming request options', async function (test) {
   sinon.assert.calledOn(requestSpy, client);
   sinon.assert.calledWithExactly(requestSpy, newConfig);
 });
+
+test('works with axios interceptors', async function (test) {
+  const instance = axios.create();
+  instance.interceptors.response.use(
+    function (successRes) {
+      return successRes;
+    },
+    function (error) {
+      error.config.url = `${TEST_URL_ROOT}/success/text`;
+      return instance(error.config);
+    }
+  );
+  const axiosFetch = buildAxiosFetch(instance);
+  const axiosResponse = await axiosFetch(`${TEST_URL_ROOT}/failure`);
+  test.truthy(axiosResponse.status === 200);
+});
