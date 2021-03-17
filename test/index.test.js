@@ -142,6 +142,19 @@ test('handles json body init options', async function (test) {
   test.deepEqual(axiosBody.headers['content-type'], expectedBody.headers['content-type']);
 });
 
+test('handles undefined body in init options', async function (test) {
+  const init = {
+    method: 'POST',
+    body: undefined
+  };
+  const { expectedResponse, axiosResponse } = await dualFetch(`${TEST_URL_ROOT}/body`, init);
+
+  const expectedBody = await expectedResponse.json();
+  const axiosBody = await axiosResponse.json();
+
+  test.deepEqual(axiosBody.body, expectedBody.body);
+});
+
 test('returns the expected response on a multipart request', async function (test) {
   const data = new FormData();
   data.append('key', 'value');
