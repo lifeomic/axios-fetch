@@ -23,7 +23,6 @@ async function axiosFetch (axios, transfomer, input, init = {}) {
     method: init.method || 'GET',
     data: typeof init.body === 'undefined' || init.body instanceof FormData ? init.body : String(init.body),
     headers: lowerCasedHeaders,
-    validateStatus: () => true,
     // Force the response to an arraybuffer type. Without this, the Response
     // object will try to guess the content type and add headers that weren't in
     // the response.
@@ -31,7 +30,12 @@ async function axiosFetch (axios, transfomer, input, init = {}) {
     responseType: 'arraybuffer'
   }, input, init);
 
-  const result = await axios.request(config);
+  let result;
+  try {
+    result = await axios.request(config);
+  } catch (err) {
+    result = err.response;
+  }
 
   const headers = new Headers(result.headers);
 
