@@ -1,5 +1,7 @@
 test/
 .nyc_output/
-.travis.yml
+.vscode/
+.github/
+yarn.lock
 .eslintrc.yml
 .editorconfig
