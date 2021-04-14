@@ -6,7 +6,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    name: Node.JS ${{ matrix.node-version }}
+    name: Node.JS ${{ matrix.node-version }} Axios ${{ matrix.axios-version }}
     strategy:
       matrix:
         node-version:
