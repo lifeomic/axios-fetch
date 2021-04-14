@@ -7,7 +7,7 @@
     "test": "nyc ava",
     "lint": "eslint .",
     "pretest": "yarn lint",
-    "coverage": "nyc report --reporter=text-lcov | coveralls"
+    "coverage": "nyc report --reporter=text-lcov > ./.nyc_output/lcov.info"
   },
   "engines": {
     "node": ">=12"
@@ -22,7 +22,7 @@
     "@lifeomic/eslint-plugin-node": "^2.0.1",
     "ava": "^3.15.0",
     "axios": "0.21.1",
-    "coveralls": "^3.0.0",
+    "coveralls": "^3.1.0",
     "eslint": "^6.0.0",
     "lodash.mapvalues": "^4.6.0",
     "nock": "^11.3.3",
