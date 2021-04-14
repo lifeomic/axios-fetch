@@ -9,8 +9,15 @@ jobs:
     name: Node.JS ${{ matrix.node-version }}
     strategy:
       matrix:
-        node-version: [12.x, 14.x]
-        axios-version: [v0.20.0-0, v0.21.1]
+        node-version:
+          - 12.x
+          - 14.x
+        axios-version:
+          - v0.17
+          - v0.18
+          - v0.19
+          - v0.20.0-0
+          - v0.21.1
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
