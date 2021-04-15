@@ -2,7 +2,7 @@ import { Response, Headers } from 'node-fetch';
 import mapKeys from 'lodash.mapkeys';
 import identity from 'lodash.identity';
 import FormData from 'form-data';
-import { AxiosInstance, AxiosRequestConfig } from 'axios';
+import { AxiosInstance, AxiosRequestConfig } from './types';
 
 export interface FetchInit extends Record<string, any> {
   headers?: Record<string, string>;
