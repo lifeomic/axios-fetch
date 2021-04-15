@@ -3,7 +3,7 @@ import nock from 'nock';
 import fetch from 'node-fetch';
 import { buildAxiosFetch, FetchInit } from '../src';
 import mapValues from 'lodash.mapvalues';
-import axios, { AxiosRequestConfig } from 'axios';
+import axios, { AxiosInstance, AxiosPromise, AxiosRequestConfig } from 'axios';
 import sinon from 'sinon';
 import FormData from 'form-data';
 
@@ -228,8 +228,13 @@ test('allows transforming request options', async (test) => {
   sinon.assert.calledWithExactly(requestSpy, newConfig);
 });
 
+type OlderAxiosFix = AxiosInstance & {
+  (config: AxiosRequestConfig): AxiosPromise;
+  (url: string, config?: AxiosRequestConfig): AxiosPromise;
+};
+
 test('works with axios interceptors', async (test) => {
-  const instance = axios.create();
+  const instance = axios.create() as OlderAxiosFix;
   instance.interceptors.response.use(
     (successRes) => successRes,
     (error) => {

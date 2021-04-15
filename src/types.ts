@@ -38,6 +38,8 @@ export interface AxiosResponse<T = any> {
   request?: any;
 }
 
+export type AxiosPromise<T = any> = Promise<AxiosResponse<T>> & any
+
 export interface AxiosInstance {
-  request<T = any, R = AxiosResponse<T>> (config: AxiosRequestConfig): Promise<R>;
+  request<T = any>(config: AxiosRequestConfig): AxiosPromise<T>;
 }
