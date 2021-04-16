@@ -2,24 +2,25 @@ import test from 'ava';
 import nock from 'nock';
 import fetch from 'node-fetch';
 import { buildAxiosFetch, FetchInit } from '../src';
-import mapValues from 'lodash.mapvalues';
 import axios, { AxiosInstance, AxiosPromise, AxiosRequestConfig } from 'axios';
 import sinon from 'sinon';
 import FormData from 'form-data';
 
 const TEST_URL_ROOT = 'https://localhost:1234';
 
-function cannonicalizeHeaders (headers: Record<string, any>) {
-  return mapValues(headers, (value) => {
+function cannonicalizeHeaders (headers: Record<string, any>): Record<string, string> {
+  return Object.keys(headers).reduce((acc, key) => {
+    let value = headers[key];
     if (Array.isArray(value) && value.length === 1) {
-      return value[0];
+      value = value[0];
     } else {
       // All headers should be strings, but nock seems to
       // sometimes provide integer values for headers like
       // content-length
-      return String(value);
+      value = String(value);
     }
-  });
+    return Object.assign(acc, { key: value });
+  }, {});
 }
 
 test.before(() => {

@@ -1,6 +1,4 @@
-import { Response, Headers } from 'node-fetch';
-import mapKeys from 'lodash.mapkeys';
-import identity from 'lodash.identity';
+import { Response, Headers as FetchHeaders } from 'node-fetch';
 import FormData from 'form-data';
 import { AxiosInstance, AxiosRequestConfig } from './types';
 
@@ -11,11 +9,9 @@ export interface FetchInit extends Record<string, any> {
   extra?: any;
 }
 
-type AxiosTransformer = (config: AxiosRequestConfig, input: string | undefined, init: FetchInit) => AxiosRequestConfig;
+export type AxiosTransformer = (config: AxiosRequestConfig, input: string | undefined, init: FetchInit) => AxiosRequestConfig;
 
-type AxiosFetch = (input?: string, init?: FetchInit) => Response;
-
-const defaultTransformer = identity as AxiosTransformer;
+export type AxiosFetch = (input?: string, init?: FetchInit) => Response;
 
 /**
  * A Fetch WebAPI implementation based on the Axios client
@@ -23,17 +19,25 @@ const defaultTransformer = identity as AxiosTransformer;
 async function axiosFetch (
   axios: AxiosInstance,
   // Convert the `fetch` style arguments into a Axios style config
-  transformer: AxiosTransformer = defaultTransformer,
+  transformer: AxiosTransformer,
   input?: string,
   init: FetchInit = {}
 ) {
-  const lowerCasedHeaders = mapKeys(init.headers, (value, key) => key.toLowerCase());
+  const rawHeaders: Record<string, string> = init.headers || {};
+  const lowerCasedHeaders = Object.keys(rawHeaders)
+    .reduce<Record<string, string>>(
+      (acc, key) => ({
+        ...acc,
+        [key.toLowerCase()]: rawHeaders[key]
+      }),
+      {}
+    );
 
   if (!('content-type' in lowerCasedHeaders)) {
     lowerCasedHeaders['content-type'] = 'text/plain;charset=UTF-8';
   }
 
-  const config = transformer({
+  const rawConfig: AxiosRequestConfig = {
     url: input,
     method: init.method || 'GET',
     data: typeof init.body === 'undefined' || init.body instanceof FormData ? init.body : String(init.body),
@@ -43,7 +47,9 @@ async function axiosFetch (
     // the response.
     // NOTE: Don't use 'stream' because it's not supported in the browser
     responseType: 'arraybuffer'
-  }, input, init);
+  };
+
+  const config = transformer ? transformer(rawConfig, input, init) : rawConfig;
 
   let result;
   try {
@@ -52,12 +58,12 @@ async function axiosFetch (
     result = err.response;
   }
 
-  const headers = new Headers(result.headers);
+  const fetchHeaders = new FetchHeaders(result.headers);
 
   return new Response(result.data, {
     status: result.status,
     statusText: result.statusText,
-    headers
+    headers: fetchHeaders
   });
 }
 
