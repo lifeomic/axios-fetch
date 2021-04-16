@@ -1,13 +1,15 @@
 {
   "name": "@lifeomic/axios-fetch",
-  "version": "1.5.2",
+  "version": "2.0.0",
   "description": "A WebAPI Fetch implementation backed by an Axios client",
   "main": "src/index.js",
+  "types": "src/index.ts",
   "scripts": {
     "test": "nyc ava",
-    "lint": "eslint .",
+    "lint": "eslint . --ext .js,.ts -f codeframe && tsc --noEmit",
     "pretest": "yarn lint",
-    "coverage": "nyc report --reporter=text-lcov > ./.nyc_output/lcov.info"
+    "coverage": "nyc report --reporter=text-lcov > ./.nyc_output/lcov.info",
+    "prepublishOnly": "yarn tsc"
   },
   "engines": {
     "node": ">=12"
@@ -16,24 +18,35 @@
     "fetch",
     "axios"
   ],
+  "ava": {
+    "extensions": [
+      "ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ]
+  },
   "author": "LifeOmic <development@lifeomic.com>",
   "license": "MIT",
   "devDependencies": {
     "@lifeomic/eslint-plugin-node": "^2.0.1",
+    "@types/sinon": "^10.0.0",
+    "@typescript-eslint/eslint-plugin": "^4.22.0",
+    "@typescript-eslint/parser": "^4.22.0",
     "ava": "^3.15.0",
     "axios": "0.21.1",
     "coveralls": "^3.1.0",
     "eslint": "^6.0.0",
-    "lodash.mapvalues": "^4.6.0",
     "nock": "^11.3.3",
     "nyc": "^15.0.0",
-    "sinon": "^7.2.4"
+    "sinon": "^10.0.1",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.4"
   },
   "dependencies": {
-    "form-data": "^2.3.3",
-    "lodash.identity": "^3.0.0",
-    "lodash.mapkeys": "^4.6.0",
-    "node-fetch": "^2.0.0"
+    "@types/node-fetch": "^2.5.10",
+    "form-data": "^2.5.0",
+    "node-fetch": "^2.6.1"
   },
   "eslintConfig": {
     "extends": "plugin:@lifeomic/node/recommended"
