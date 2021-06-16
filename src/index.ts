@@ -11,7 +11,7 @@ export interface FetchInit extends Record<string, any> {
 
 export type AxiosTransformer = (config: AxiosRequestConfig, input: string | undefined, init: FetchInit) => AxiosRequestConfig;
 
-export type AxiosFetch = (input?: string, init?: FetchInit) => Response;
+export type AxiosFetch = (input?: string, init?: FetchInit) => Promise<Response>;
 
 /**
  * A Fetch WebAPI implementation based on the Axios client
@@ -19,7 +19,7 @@ export type AxiosFetch = (input?: string, init?: FetchInit) => Response;
 async function axiosFetch (
   axios: AxiosInstance,
   // Convert the `fetch` style arguments into a Axios style config
-  transformer: AxiosTransformer,
+  transformer?: AxiosTransformer,
   input?: string,
   init: FetchInit = {}
 ) {
