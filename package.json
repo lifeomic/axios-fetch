@@ -1,6 +1,6 @@
 {
   "name": "@lifeomic/axios-fetch",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "A WebAPI Fetch implementation backed by an Axios client",
   "main": "src/index.js",
   "types": "src/index.ts",
