@@ -55,7 +55,11 @@ async function axiosFetch (
   try {
     result = await axios.request(config);
   } catch (err) {
-    result = err.response;
+    if (err.response) {
+      result = err.response;
+    } else {
+      throw err;
+    }
   }
 
   const fetchHeaders = new FetchHeaders(result.headers);

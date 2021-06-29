@@ -45,7 +45,9 @@ test.before(() => {
     .get('/failure')
     .reply(501)
     .get('/failureBody')
-    .reply(400, { test: true });
+    .reply(400, { test: true })
+    .get('/error')
+    .replyWithError('simulated failure');
 });
 
 async function dualFetch (input: string, init?: FetchInit) {
@@ -197,6 +199,12 @@ test('returns the expected response body on a failure', async (test) => {
   const axiosBody = await axiosResponse.text();
   test.deepEqual(axiosBody, expectedBody);
   test.deepEqual(axiosResponse.headers, expectedResponse.headers);
+});
+
+test('throws the original error on a network error', async (test) => {
+  const axiosFetch = buildAxiosFetch(axios);
+  const error = await test.throwsAsync(axiosFetch(`${TEST_URL_ROOT}/error`));
+  test.is(error.message, 'simulated failure');
 });
 
 test('allows transforming request options', async (test) => {
