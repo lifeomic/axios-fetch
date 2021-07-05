@@ -11,6 +11,10 @@
     "coverage": "nyc report --reporter=text-lcov > ./.nyc_output/lcov.info",
     "prepublishOnly": "yarn tsc"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lifeomic/axios-fetch.git"
+  },
   "engines": {
     "node": ">=12"
   },
