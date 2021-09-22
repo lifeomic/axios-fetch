@@ -9,7 +9,7 @@
     "lint": "eslint . --ext .ts -f codeframe && tsc --noEmit",
     "pretest": "yarn lint",
     "coverage": "nyc report --reporter=text-lcov > ./.nyc_output/lcov.info",
-    "prepublishOnly": "yarn tsc"
+    "prepare": "yarn tsc"
   },
   "engines": {
     "node": ">=12"
