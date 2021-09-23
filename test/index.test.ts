@@ -1,7 +1,7 @@
 import test from 'ava';
 import nock from 'nock';
-import fetch, { RequestInit } from 'node-fetch';
-import { buildAxiosFetch } from '../src';
+import fetch from 'node-fetch';
+import { buildAxiosFetch, FetchInit } from '../src';
 import axios, { AxiosInstance, AxiosPromise, AxiosRequestConfig } from 'axios';
 import sinon from 'sinon';
 import FormData from 'form-data';
@@ -50,7 +50,7 @@ test.before(() => {
     .replyWithError('simulated failure');
 });
 
-async function dualFetch (input: string, init?: RequestInit) {
+async function dualFetch (input: string, init?: FetchInit) {
   const expectedResponse = await fetch(input, init);
   const axiosFetch = buildAxiosFetch(axios);
   const axiosResponse = await axiosFetch(input, init);
@@ -85,7 +85,7 @@ test('returns the expected response on a text body', async (test) => {
 });
 
 test('respects the headers init option', async (test) => {
-  const init: RequestInit = {
+  const init: FetchInit = {
     method: 'POST',
     headers: {
       'testheader': 'test-value'
@@ -99,7 +99,7 @@ test('respects the headers init option', async (test) => {
 });
 
 test('handles text body init options', async (test) => {
-  const init: RequestInit = {
+  const init: FetchInit = {
     method: 'POST',
     body: 'some text'
   };
@@ -113,7 +113,7 @@ test('handles text body init options', async (test) => {
 });
 
 test('handles text body with content-type init options', async (test) => {
-  const init: RequestInit = {
+  const init: FetchInit = {
     method: 'POST',
     body: '{}',
     headers: {
@@ -130,7 +130,7 @@ test('handles text body with content-type init options', async (test) => {
 });
 
 test('handles undefined body in init options', async (test) => {
-  const init: RequestInit = {
+  const init: FetchInit = {
     method: 'POST',
     body: undefined
   };
@@ -145,7 +145,7 @@ test('handles undefined body in init options', async (test) => {
 test('returns the expected response on a multipart request', async (test) => {
   const data = new FormData();
   data.append('key', 'value');
-  const init: RequestInit = {
+  const init: FetchInit = {
     method: 'POST',
     body: data
   };
@@ -208,7 +208,7 @@ test('allows transforming request options', async (test) => {
 
   const axiosFetch = buildAxiosFetch(client, transformer);
 
-  const init: RequestInit = { method: 'POST' };
+  const init: FetchInit = { method: 'POST', extra: 'options' };
   await axiosFetch(originalUrl, init);
 
   // Make sure the transformer was called with the expected arguments

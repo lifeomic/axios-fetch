@@ -2,9 +2,11 @@ import { Response, Request, Headers as FetchHeaders, RequestInfo, RequestInit } 
 import { AxiosInstance, AxiosRequestConfig } from './types';
 import FormData from 'form-data';
 
-export type AxiosTransformer = (config: AxiosRequestConfig, input: RequestInfo, init?: RequestInit) => AxiosRequestConfig;
+export type FetchInit = RequestInit & { extra?: any }
 
-export type AxiosFetch = (input: RequestInfo, init?: RequestInit) => Promise<Response>;
+export type AxiosTransformer = (config: AxiosRequestConfig, input: RequestInfo, init?: FetchInit) => AxiosRequestConfig;
+
+export type AxiosFetch = (input: RequestInfo, init?: FetchInit) => Promise<Response>;
 
 /**
  * A Fetch WebAPI implementation based on the Axios client
@@ -18,7 +20,7 @@ async function axiosFetch (
   axios: AxiosInstance,
   transformer: AxiosTransformer | undefined,
   input: RequestInfo,
-  init?: RequestInit
+  init?: FetchInit
 ) {
   // Request class handles for us all the input normalisation
   const request = new Request(input, init);
