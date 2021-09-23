@@ -1,46 +1,45 @@
-import { Response, Headers as FetchHeaders } from 'node-fetch';
-import FormData from 'form-data';
+import { Response, Request, Headers as FetchHeaders, RequestInfo, RequestInit } from 'node-fetch';
 import { AxiosInstance, AxiosRequestConfig } from './types';
+import FormData from 'form-data';
 
-export interface FetchInit extends Record<string, any> {
-  headers?: Record<string, string>;
-  method?: AxiosRequestConfig['method'];
-  body?: FormData | any;
-  extra?: any;
-}
+export type FetchInit = RequestInit & { extra?: any }
 
-export type AxiosTransformer = (config: AxiosRequestConfig, input: string | undefined, init: FetchInit) => AxiosRequestConfig;
+export type AxiosTransformer = (config: AxiosRequestConfig, input: RequestInfo, init?: FetchInit) => AxiosRequestConfig;
 
-export type AxiosFetch = (input?: string, init?: FetchInit) => Promise<Response>;
+export type AxiosFetch = (input: RequestInfo, init?: FetchInit) => Promise<Response>;
 
 /**
  * A Fetch WebAPI implementation based on the Axios client
+ *
+ * @param axios
+ * @param transformer Convert the `fetch` style arguments into a Axios style config
+ * @param input
+ * @param init
  */
 async function axiosFetch (
   axios: AxiosInstance,
-  // Convert the `fetch` style arguments into a Axios style config
-  transformer?: AxiosTransformer,
-  input?: string,
-  init: FetchInit = {}
+  transformer: AxiosTransformer | undefined,
+  input: RequestInfo,
+  init?: FetchInit
 ) {
-  const rawHeaders: Record<string, string> = init.headers || {};
-  const lowerCasedHeaders = Object.keys(rawHeaders)
-    .reduce<Record<string, string>>(
-      (acc, key) => {
-        acc[key.toLowerCase()] = rawHeaders[key];
-        return acc;
-      },
-      {}
-    );
+  // Request class handles for us all the input normalisation
+  const request = new Request(input, init);
+  const lowerCasedHeaders: Record<string, string> = {};
+
+  for (const entry of request.headers.entries()) {
+    lowerCasedHeaders[entry[0].toLowerCase()] = entry[1];
+  }
 
   if (!('content-type' in lowerCasedHeaders)) {
     lowerCasedHeaders['content-type'] = 'text/plain;charset=UTF-8';
   }
 
+  const data = init?.body instanceof FormData ? init?.body : await request.arrayBuffer();
+
   const rawConfig: AxiosRequestConfig = {
-    url: input,
-    method: init.method || 'GET',
-    data: typeof init.body === 'undefined' || init.body instanceof FormData ? init.body : String(init.body),
+    url: request.url,
+    method: (request.method || 'GET') as AxiosRequestConfig['method'],
+    data: data,
     headers: lowerCasedHeaders,
     // Force the response to an arraybuffer type. Without this, the Response
     // object will try to guess the content type and add headers that weren't in

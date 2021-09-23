@@ -129,22 +129,6 @@ test('handles text body with content-type init options', async (test) => {
   test.deepEqual(axiosBody.headers['content-type'], expectedBody.headers['content-type']);
 });
 
-test('handles json body init options', async (test) => {
-  const init: FetchInit = {
-    method: 'POST',
-    body: {
-      test: 'value'
-    }
-  };
-  const { expectedResponse, axiosResponse } = await dualFetch(`${TEST_URL_ROOT}/body`, init);
-
-  const expectedBody = await expectedResponse.json();
-  const axiosBody = await axiosResponse.json();
-
-  test.deepEqual(axiosBody.body, expectedBody.body);
-  test.deepEqual(axiosBody.headers['content-type'], expectedBody.headers['content-type']);
-});
-
 test('handles undefined body in init options', async (test) => {
   const init: FetchInit = {
     method: 'POST',
@@ -213,7 +197,8 @@ test('allows transforming request options', async (test) => {
 
   let newConfig: AxiosRequestConfig = {};
   const transformer = sinon.stub().callsFake((config) => {
-    newConfig = Object.create(config);
+    test.is(config.url, originalUrl, 'original url');
+    newConfig = {};
     newConfig.url = transformedUrl;
     return newConfig;
   });
@@ -223,7 +208,7 @@ test('allows transforming request options', async (test) => {
 
   const axiosFetch = buildAxiosFetch(client, transformer);
 
-  const init: FetchInit = { extra: 'options' };
+  const init: FetchInit = { method: 'POST', extra: 'options' };
   await axiosFetch(originalUrl, init);
 
   // Make sure the transformer was called with the expected arguments

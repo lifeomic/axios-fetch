@@ -6,10 +6,10 @@
   "types": "src/index.ts",
   "scripts": {
     "test": "nyc ava",
-    "lint": "eslint . --ext .js,.ts -f codeframe && tsc --noEmit",
+    "lint": "eslint . --ext .ts -f codeframe && tsc --noEmit",
     "pretest": "yarn lint",
     "coverage": "nyc report --reporter=text-lcov > ./.nyc_output/lcov.info",
-    "prepublishOnly": "yarn tsc"
+    "prepare": "yarn tsc"
   },
   "engines": {
     "node": ">=12"
