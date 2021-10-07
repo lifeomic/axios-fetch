@@ -1,10 +1,11 @@
 import test from 'ava';
 import nock from 'nock';
-import fetch from 'node-fetch';
+import fetch, { RequestInit } from 'node-fetch';
 import { buildAxiosFetch, FetchInit } from '../src';
 import axios, { AxiosInstance, AxiosPromise, AxiosRequestConfig } from 'axios';
 import sinon from 'sinon';
 import FormData from 'form-data';
+import isObject from 'lodash/isObject';
 
 const TEST_URL_ROOT = 'https://localhost:1234';
 
@@ -39,7 +40,7 @@ test.before(() => {
     .reply(200, function (uri, body) {
       return {
         headers: cannonicalizeHeaders(this.req.headers),
-        body
+        body,
       };
     })
     .get('/failure')
@@ -51,7 +52,15 @@ test.before(() => {
 });
 
 async function dualFetch (input: string, init?: FetchInit) {
-  const expectedResponse = await fetch(input, init);
+  let requestInit: RequestInit | undefined;
+  if (init) {
+    const { body, ...rest } = init;
+    requestInit = {
+      ...rest,
+      body: isObject(body) ? JSON.stringify(body) : body,
+    };
+  }
+  const expectedResponse = await fetch(input, requestInit);
   const axiosFetch = buildAxiosFetch(axios);
   const axiosResponse = await axiosFetch(input, init);
 
@@ -88,8 +97,8 @@ test('respects the headers init option', async (test) => {
   const init: FetchInit = {
     method: 'POST',
     headers: {
-      'testheader': 'test-value'
-    }
+      'testheader': 'test-value',
+    },
   };
   const { expectedResponse, axiosResponse } = await dualFetch(`${TEST_URL_ROOT}/headers`, init);
 
@@ -101,7 +110,7 @@ test('respects the headers init option', async (test) => {
 test('handles text body init options', async (test) => {
   const init: FetchInit = {
     method: 'POST',
-    body: 'some text'
+    body: 'some text',
   };
   const { expectedResponse, axiosResponse } = await dualFetch(`${TEST_URL_ROOT}/body`, init);
 
@@ -117,8 +126,8 @@ test('handles text body with content-type init options', async (test) => {
     method: 'POST',
     body: '{}',
     headers: {
-      'Content-Type': 'application/json'
-    }
+      'Content-Type': 'application/json',
+    },
   };
   const { expectedResponse, axiosResponse } = await dualFetch(`${TEST_URL_ROOT}/body`, init);
 
@@ -133,8 +142,8 @@ test('handles json body init options', async (test) => {
   const init: FetchInit = {
     method: 'POST',
     body: {
-      test: 'value'
-    }
+      test: 'value',
+    },
   };
   const { expectedResponse, axiosResponse } = await dualFetch(`${TEST_URL_ROOT}/body`, init);
 
@@ -148,7 +157,7 @@ test('handles json body init options', async (test) => {
 test('handles undefined body in init options', async (test) => {
   const init: FetchInit = {
     method: 'POST',
-    body: undefined
+    body: undefined,
   };
   const { expectedResponse, axiosResponse } = await dualFetch(`${TEST_URL_ROOT}/body`, init);
 
@@ -161,9 +170,9 @@ test('handles undefined body in init options', async (test) => {
 test('returns the expected response on a multipart request', async (test) => {
   const data = new FormData();
   data.append('key', 'value');
-  const init: FetchInit = {
+  const init: RequestInit = {
     method: 'POST',
-    body: data
+    body: data,
   };
 
   const input = `${TEST_URL_ROOT}/body`;
@@ -249,7 +258,7 @@ test('works with axios interceptors', async (test) => {
     (error) => {
       error.config.url = `${TEST_URL_ROOT}/success/text`;
       return instance(error.config);
-    }
+    },
   );
   const axiosFetch = buildAxiosFetch(instance);
   const axiosResponse = await axiosFetch(`${TEST_URL_ROOT}/failure`);

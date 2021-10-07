@@ -38,6 +38,15 @@ export interface AxiosResponse<T = any> {
   request?: any;
 }
 
+export interface AxiosError<T = never> extends Error {
+  config: AxiosRequestConfig;
+  code?: string;
+  request?: any;
+  response?: AxiosResponse<T>;
+  isAxiosError: boolean;
+  toJSON: () => object;
+}
+
 export type AxiosPromise<T = any> = Promise<AxiosResponse<T>> & any
 
 export interface AxiosInstance {

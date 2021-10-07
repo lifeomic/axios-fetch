@@ -1,11 +1,8 @@
 {
   "extends": [
-    "plugin:@lifeomic/node/recommended",
     "eslint:recommended",
-    "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended"
+    "@lifeomic/standards/typescript"
   ],
-  "parser": "@typescript-eslint/parser",
   "plugins": ["@typescript-eslint"],
   "rules": {
     "@typescript-eslint/no-explicit-any": "off",
@@ -13,6 +10,7 @@
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/no-var-requires": "off",
-    "lodash/import-scope": "off"
+    "lodash/import-scope": "off",
+    "prefer-arrow/prefer-arrow-functions": "off"
   }
 }
