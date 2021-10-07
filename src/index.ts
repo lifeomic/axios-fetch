@@ -1,5 +1,5 @@
 import { Response, RequestInit, RequestInfo } from 'node-fetch';
-import { AxiosInstance, AxiosRequestConfig, AxiosError } from './types';
+import { AxiosInstance, AxiosRequestConfig } from './types';
 import { createFetchHeaders, createAxiosHeaders, getUrl } from './typeUtils';
 
 export interface FetchInit extends Omit<RequestInit, 'body'> {
@@ -57,9 +57,9 @@ const axiosFetch: (axios: AxiosInstance, transformer?: AxiosTransformer) => Axio
   let result;
   try {
     result = await axios.request(config);
-  } catch (err: any | AxiosError) {
-    if ('response' in err) {
-      result = (err as AxiosError).response;
+  } catch (err: any) {
+    if (err.response) {
+      result = err.response;
     } else {
       throw err;
     }
