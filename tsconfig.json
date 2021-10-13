@@ -6,6 +6,7 @@
     "esModuleInterop": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
+    "noUncheckedIndexedAccess": true,
     "strict": true,
     "alwaysStrict": true,
     "strictNullChecks": true,
