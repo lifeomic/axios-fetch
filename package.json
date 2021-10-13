@@ -1,6 +1,6 @@
 {
   "name": "@lifeomic/axios-fetch",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "A WebAPI Fetch implementation backed by an Axios client",
   "main": "src/index.js",
   "types": "src/index.ts",
@@ -10,6 +10,10 @@
     "pretest": "yarn lint",
     "coverage": "nyc report --reporter=text-lcov > ./.nyc_output/lcov.info",
     "prepublishOnly": "yarn tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lifeomic/axios-fetch.git"
   },
   "engines": {
     "node": ">=12"
@@ -34,7 +38,7 @@
     "@typescript-eslint/eslint-plugin": "^4.22.0",
     "@typescript-eslint/parser": "^4.22.0",
     "ava": "^3.15.0",
-    "axios": "0.21.1",
+    "axios": "^0.21.4",
     "coveralls": "^3.1.0",
     "eslint": "^6.0.0",
     "nock": "^11.3.3",
