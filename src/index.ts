@@ -27,7 +27,7 @@ async function axiosFetch (
   const lowerCasedHeaders = Object.keys(rawHeaders).filter(key => key && rawHeaders[key])
     .reduce<Record<string, string>>(
       (acc, key) => {
-        acc[key.toLowerCase()] = rawHeaders[key];
+        acc[key.toLowerCase()] = rawHeaders[key] as string;
         return acc;
       },
       {}
