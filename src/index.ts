@@ -54,7 +54,7 @@ async function axiosFetch (
   let result;
   try {
     result = await axios.request(config);
-  } catch (err) {
+  } catch (err: any) {
     if (err.response) {
       result = err.response;
     } else {
