@@ -114,6 +114,22 @@ test('ensure any headers set to undefined are not added', async (test) => {
   test.deepEqual(axiosBody.testheader, expectedBody.testheader);
 });
 
+test('ensure any headers with key set to undefined are not added', async (test) => {
+  const init: FetchInit = {
+    method: 'POST',
+    headers: {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      undefined: 'test-value'
+    }
+  };
+  const { expectedResponse, axiosResponse } = await dualFetch(`${TEST_URL_ROOT}/headers`, init);
+
+  const expectedBody = await expectedResponse.json();
+  const axiosBody = await axiosResponse.json();
+  test.deepEqual(axiosBody.testheader, expectedBody.testheader);
+});
+
 test('handles text body init options', async (test) => {
   const init: FetchInit = {
     method: 'POST',
