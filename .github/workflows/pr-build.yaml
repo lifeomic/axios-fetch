@@ -12,12 +12,15 @@ jobs:
         node-version:
           - 12.x
           - 14.x
+          - 16.x
         axios-version:
           - v0.17
           - v0.18
           - v0.19
           - v0.20.0-0
           - v0.21.1
+          - v0.22
+          - v0.23
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
