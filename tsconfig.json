@@ -19,11 +19,10 @@
     "inlineSources": true,
     "resolveJsonModule": true,
     "rootDir": ".",
-    "skipLibCheck": true
+    "declaration": true,
   },
   "include": [
-    "src/**/*",
-    "bin/*"
+    "src/**/*"
   ],
   "exclude": [
     "node_modules"
