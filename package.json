@@ -3,7 +3,7 @@
   "version": "2.0.5",
   "description": "A WebAPI Fetch implementation backed by an Axios client",
   "main": "src/index.js",
-  "types": "src/index.ts",
+  "types": "src/index.d.ts",
   "files": [
     "src/**/*"
   ],

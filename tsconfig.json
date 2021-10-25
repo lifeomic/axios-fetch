@@ -18,11 +18,11 @@
     "inlineSourceMap": true,
     "inlineSources": true,
     "resolveJsonModule": true,
-    "rootDir": "."
+    "rootDir": ".",
+    "declaration": true
   },
   "include": [
-    "src/**/*",
-    "bin/*"
+    "src/**/*"
   ],
   "exclude": [
     "node_modules"
