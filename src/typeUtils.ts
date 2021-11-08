@@ -2,9 +2,9 @@ import { Headers, HeadersInit, Request, RequestInfo } from 'node-fetch';
 
 export function createFetchHeaders (axiosHeaders: Record<string, string> = {}): Headers {
   const headers = new Headers();
-  Object.keys(axiosHeaders).forEach((name) => {
-    const values = axiosHeaders[name]?.split(/, */);
-    values?.forEach((value) => headers.append(name, value));
+  Object.entries(axiosHeaders).forEach(([key, value]) => {
+    const values = value.split(/, */);
+    values.forEach((value) => headers.append(key, value));
   });
   return headers;
 }
@@ -14,12 +14,9 @@ export function createAxiosHeaders (headers: HeadersInit = {}): Record<string, s
 
   if (headers instanceof Headers) {
     const headersRaw = headers.raw();
-    for (const name of headers.keys()) {
-      const value = headersRaw[name];
-      if (value) {
-        rawHeaders[name] = value.join(', ');
-      }
-    }
+    Object.entries(headersRaw).forEach(([key, value]) => {
+      rawHeaders[key] = value.join(', ');
+    });
   } else if (Array.isArray(headers)) {
     headers.forEach(([name, ...values]) => {
       rawHeaders[name!] = values.join(', ');
