@@ -1,12 +1,14 @@
 import test from 'ava';
 import nock from 'nock';
-import fetch from 'node-fetch';
-import { buildAxiosFetch, FetchInit } from '../src';
+import fetch, { RequestInit } from 'node-fetch';
+import { buildAxiosFetch } from '../src';
 import axios, { AxiosInstance, AxiosPromise, AxiosRequestConfig } from 'axios';
 import sinon from 'sinon';
 import FormData from 'form-data';
 
 const TEST_URL_ROOT = 'https://localhost:1234';
+
+type ExtrasInit = RequestInit & { extra?: any };
 
 function cannonicalizeHeaders (headers: Record<string, any>): Record<string, string> {
   return Object.keys(headers).reduce((acc, key) => {
@@ -50,7 +52,7 @@ test.before(() => {
     .replyWithError('simulated failure');
 });
 
-async function dualFetch (input: string, init?: FetchInit) {
+async function dualFetch (input: string, init: RequestInit = {}) {
   const expectedResponse = await fetch(input, init);
   const axiosFetch = buildAxiosFetch(axios);
   const axiosResponse = await axiosFetch(input, init);
@@ -85,7 +87,7 @@ test('returns the expected response on a text body', async (test) => {
 });
 
 test('respects the headers init option', async (test) => {
-  const init: FetchInit = {
+  const init: RequestInit = {
     method: 'POST',
     headers: {
       'testheader': 'test-value'
@@ -99,12 +101,11 @@ test('respects the headers init option', async (test) => {
 });
 
 test('ensure any headers set to undefined are not added', async (test) => {
-  const init: FetchInit = {
+  const init: RequestInit = {
     method: 'POST',
+    // @ts-expect-errors Undefined headers shouldn't be forwarded
     headers: {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      'testheader': undefined
+      testheader: undefined
     }
   };
   const { expectedResponse, axiosResponse } = await dualFetch(`${TEST_URL_ROOT}/headers`, init);
@@ -115,7 +116,7 @@ test('ensure any headers set to undefined are not added', async (test) => {
 });
 
 test('ensure any headers with key set to undefined are not added', async (test) => {
-  const init: FetchInit = {
+  const init: RequestInit = {
     method: 'POST',
     headers: {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -131,7 +132,7 @@ test('ensure any headers with key set to undefined are not added', async (test) 
 });
 
 test('handles text body init options', async (test) => {
-  const init: FetchInit = {
+  const init: RequestInit = {
     method: 'POST',
     body: 'some text'
   };
@@ -145,7 +146,7 @@ test('handles text body init options', async (test) => {
 });
 
 test('handles text body with content-type init options', async (test) => {
-  const init: FetchInit = {
+  const init: RequestInit = {
     method: 'POST',
     body: '{}',
     headers: {
@@ -161,24 +162,8 @@ test('handles text body with content-type init options', async (test) => {
   test.deepEqual(axiosBody.headers['content-type'], expectedBody.headers['content-type']);
 });
 
-test('handles json body init options', async (test) => {
-  const init: FetchInit = {
-    method: 'POST',
-    body: {
-      test: 'value'
-    }
-  };
-  const { expectedResponse, axiosResponse } = await dualFetch(`${TEST_URL_ROOT}/body`, init);
-
-  const expectedBody = await expectedResponse.json();
-  const axiosBody = await axiosResponse.json();
-
-  test.deepEqual(axiosBody.body, expectedBody.body);
-  test.deepEqual(axiosBody.headers['content-type'], expectedBody.headers['content-type']);
-});
-
 test('handles undefined body in init options', async (test) => {
-  const init: FetchInit = {
+  const init: RequestInit = {
     method: 'POST',
     body: undefined
   };
@@ -193,7 +178,7 @@ test('handles undefined body in init options', async (test) => {
 test('returns the expected response on a multipart request', async (test) => {
   const data = new FormData();
   data.append('key', 'value');
-  const init: FetchInit = {
+  const init: RequestInit = {
     method: 'POST',
     body: data
   };
@@ -253,9 +238,9 @@ test('allows transforming request options', async (test) => {
   const client = axios.create();
   const requestSpy = sinon.spy(client, 'request');
 
-  const axiosFetch = buildAxiosFetch(client, transformer);
+  const axiosFetch = buildAxiosFetch<ExtrasInit>(client, transformer);
 
-  const init: FetchInit = { extra: 'options' };
+  const init: ExtrasInit = { extra: 'options' };
   await axiosFetch(originalUrl, init);
 
   // Make sure the transformer was called with the expected arguments
