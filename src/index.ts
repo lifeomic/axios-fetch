@@ -1,6 +1,6 @@
 import { Response, RequestInfo, RequestInit } from 'node-fetch';
-import { AxiosInstance, AxiosRequestConfig } from './types';
 import { createAxiosHeaders, createFetchHeaders, getUrl } from './typeUtils';
+import { AxiosInstance, AxiosRequestConfig } from 'axios';
 
 export type AxiosTransformer<Init extends RequestInit = RequestInit> = (config: AxiosRequestConfig, input: RequestInfo, init?: Init) => AxiosRequestConfig;
 
@@ -15,11 +15,14 @@ const axiosFetch = <Init extends RequestInit = RequestInit>(
     input: RequestInfo,
     init?: Init
   ) => {
-    const rawHeaders: Record<string, string | undefined> = createAxiosHeaders(init?.headers);
-    const lowerCasedHeaders = Object.keys(rawHeaders).filter(key => key && rawHeaders[key])
-      .reduce<Record<string, string | undefined>>(
+    const rawHeaders = createAxiosHeaders(init?.headers);
+    const lowerCasedHeaders = Object.keys(rawHeaders)
+      .reduce<Record<string, string>>(
         (acc, key) => {
-          acc[key.toLowerCase()] = rawHeaders[key];
+          const value = rawHeaders[key];
+          if (value) {
+            acc[key.toLowerCase()] = value;
+          }
           return acc;
         },
         {}

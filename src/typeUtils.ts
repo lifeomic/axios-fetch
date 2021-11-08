@@ -9,13 +9,16 @@ export function createFetchHeaders (axiosHeaders: Record<string, string> = {}): 
   return headers;
 }
 
-export function createAxiosHeaders (headers: HeadersInit = {}): Record<string, string | undefined> {
-  const rawHeaders: Record<string, string | undefined> = {};
+export function createAxiosHeaders (headers: HeadersInit = {}): Record<string, string> {
+  const rawHeaders: Record<string, string> = {};
 
   if (headers instanceof Headers) {
     const headersRaw = headers.raw();
     for (const name of headers.keys()) {
-      rawHeaders[name] = headersRaw[name]?.join(', ');
+      const value = headersRaw[name];
+      if (value) {
+        rawHeaders[name] = value.join(', ');
+      }
     }
   } else if (Array.isArray(headers)) {
     headers.forEach(([name, ...values]) => {

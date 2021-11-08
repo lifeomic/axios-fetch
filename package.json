@@ -9,7 +9,8 @@
   ],
   "scripts": {
     "test": "nyc ava",
-    "lint": "eslint . --ext .js,.ts -f codeframe && tsc --noEmit",
+    "lint": "eslint . --ext .js,.ts -f codeframe",
+    "postlint": "yarn tsc --noEmit",
     "pretest": "yarn lint",
     "coverage": "nyc report --reporter=text-lcov > ./.nyc_output/lcov.info",
     "prepublishOnly": "yarn tsc"
@@ -41,7 +42,7 @@
     "@typescript-eslint/eslint-plugin": "^5.1.0",
     "@typescript-eslint/parser": "^5.1.0",
     "ava": "^3.15.0",
-    "axios": "^0.23.0",
+    "axios": "^0.24.0",
     "coveralls": "^3.1.1",
     "eslint": "^7.32.0",
     "nock": "^13.1.4",
