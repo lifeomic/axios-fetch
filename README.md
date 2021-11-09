@@ -1,12 +1,26 @@
 # Axios-Fetch
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/lifeomic/axios-fetch.svg)](https://greenkeeper.io/)
-[![Build Status](https://travis-ci.org/lifeomic/axios-fetch.svg?branch=master)](https://travis-ci.org/lifeomic/axios-fetch)
+[![npm](https://img.shields.io/npm/v/@lifeomic/axios-fetch.svg)](https://www.npmjs.com/package/@lifeomic/axios-fetch)
+[![Build Status](https://github.com/lifeomic/axios-fetch/actions/workflows/release.yaml/badge.svg)](https://github.com/lifeomic/axios-fetch/actions/workflows/release.yaml)
 [![Coverage Status](https://coveralls.io/repos/github/lifeomic/axios-fetch/badge.svg?branch=master)](https://coveralls.io/github/lifeomic/axios-fetch?branch=master)
+![Dependabot Badge](https://flat.badgen.net/dependabot/lifeomic/axios-fetch?icon=dependabot)
 
-This library exposes a Fetch WebAPI implementation backed by a Axios client
+This library exposes a Fetch WebAPI implementation backed by an Axios client
 instance. This allows a bridge between projects that have pre-configured Axios
 clients already to other libraries that require Fetch implementations.
+
+## Global Response object
+
+It is expected that the global Response object will be available. For testing we use the [node-fetch
+](https://www.npmjs.com/package/node-fetch) library.
+
+```typescript
+import { Response } from 'node-fetch';
+// @ts-expect-error node-fetch doesn't exactly match the Response object, but close enough.
+global.Response = Response;
+```
+
+## Example
 
 One library that wants a Fetch implementation is the [Apollo Link
 HTTP](https://www.apollographql.com/docs/link/links/http.html) library. If your
@@ -17,7 +31,7 @@ use that client in your apollo-link-http instance. Here is some sample code:
 const { buildAxiosFetch } = require("@lifeomic/axios-fetch");
 const { createHttpLink } = require("apollo-link-http");
 const link = createHttpLink({
-  uri: "/graphql"
+  uri: "/graphql",
   fetch: buildAxiosFetch(yourAxiosInstance)
 });
 ```
@@ -36,7 +50,7 @@ const fetch = buildAxiosFetch(yourAxiosInstance, function (config) {
 });
 ```
 
-## Support for IE11 
+## Support for IE11
 
 To Support IE11 add following dependencies
 

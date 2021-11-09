@@ -20,17 +20,10 @@ const axiosFetch = <Init extends RequestInit = RequestInit>(
     init?: Init
   ) => {
     const rawHeaders = createAxiosHeaders(init?.headers);
-    const lowerCasedHeaders = Object.keys(rawHeaders)
-      .reduce<Record<string, string>>(
-        (acc, key) => {
-          const value = rawHeaders[key];
-          if (value) {
-            acc[key.toLowerCase()] = value;
-          }
-          return acc;
-        },
-        {}
-      );
+    const lowerCasedHeaders: Record<string, string> = {};
+    Object.entries(rawHeaders).forEach(([name, value]) => {
+      lowerCasedHeaders[name.toLowerCase()] = value;
+    });
 
     if (!('content-type' in lowerCasedHeaders)) {
       lowerCasedHeaders['content-type'] = 'text/plain;charset=UTF-8';
