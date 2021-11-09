@@ -1,39 +1,52 @@
-import { Headers, HeadersInit, Request, RequestInfo } from 'node-fetch';
+import { Headers as NodeHeaders } from 'node-fetch';
 
-export function createFetchHeaders (axiosHeaders: Record<string, string> = {}): Headers {
-  const headers = new Headers();
-  Object.entries(axiosHeaders).forEach(([key, value]) => {
-    const values = value.split(/, */);
-    values.forEach((value) => headers.append(key, value));
+export type HeadersLike = string[][] | Record<string, string | undefined> | Headers | NodeHeaders;
+
+export type UrlLike = string | {
+  href?: string;
+  url?: string;
+}
+
+export function createFetchHeaders (axiosHeaders: Record<string, string> = {}): string[][] {
+  const headers: string[][] = [];
+  Object.entries(axiosHeaders).forEach(([name, value]) => {
+    headers.push([name, value]);
   });
   return headers;
 }
 
-export function createAxiosHeaders (headers: HeadersInit = {}): Record<string, string> {
+const isHeaders = (headers: HeadersLike): headers is Headers => headers?.constructor?.name === 'Headers';
+
+export function createAxiosHeaders (headers: HeadersLike = {}): Record<string, string> {
   const rawHeaders: Record<string, string> = {};
 
-  if (headers instanceof Headers) {
-    const headersRaw = headers.raw();
-    Object.entries(headersRaw).forEach(([key, value]) => {
-      rawHeaders[key] = value.join(', ');
+  if (isHeaders(headers)) {
+    headers.forEach((value, name) => {
+      rawHeaders[name] = value;
     });
   } else if (Array.isArray(headers)) {
-    headers.forEach(([name, ...values]) => {
-      rawHeaders[name!] = values.join(', ');
+    headers.forEach(([name, value]) => {
+      if (value) {
+        rawHeaders[name!] = value;
+      }
     });
   } else {
-    Object.assign(rawHeaders, headers);
+    Object.entries(headers).forEach(([name, value]) => {
+      if (value) {
+        rawHeaders[name] = value;
+      }
+    });
   }
   return rawHeaders;
 }
 
-export function getUrl (input?: RequestInfo): string | undefined {
+export function getUrl (input?: UrlLike): string | undefined {
   let url: string | undefined;
   if (typeof input === 'string') {
     url = input;
-  } else if (input && 'href' in input) {
+  } else if (input?.href) {
     url = input.href;
-  } else if (input instanceof Request) {
+  } else if (input?.url) {
     url = input.url;
   }
   return url;

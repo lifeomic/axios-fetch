@@ -4,7 +4,7 @@ import {
   createFetchHeaders,
   getUrl
 } from '../src/typeUtils';
-import { Headers, Request } from 'node-fetch';
+import { Request, Headers as NodeHeaders } from 'node-fetch';
 
 const headersObject = {
   key1: 'value1',
@@ -13,10 +13,11 @@ const headersObject = {
 
 const headersArray = [
   ['key1', 'value1'],
-  ['key2', 'value2', 'value3']
+  ['key2', 'value2, value3'],
+  ['undefinedValue']
 ];
 
-const headersClass = new Headers();
+const headersClass = new NodeHeaders();
 headersClass.append('key1', 'value1');
 headersClass.append('key2', 'value2');
 headersClass.append('key2', 'value3');
@@ -24,19 +25,22 @@ headersClass.append('key2', 'value3');
 const testUrl = 'http://test.test.test';
 
 test('createFetchHeaders will return an empty object on undefined', (t) => {
-  const expected = new Headers();
-  t.deepEqual(createFetchHeaders(), expected);
+  t.deepEqual(createFetchHeaders(), []);
 });
 
 test('createFetchHeaders will create a proper Headers object', (t) => {
-  t.deepEqual(createFetchHeaders(headersObject).raw(), headersClass.raw());
+  const actual = createFetchHeaders(headersObject);
+  actual.forEach(([name, value]) => {
+    t.is(value, headersClass.get(name!));
+  });
 });
 
 test('createAxiosHeaders will return an empty object on undefined', (t) => {
   t.deepEqual(createAxiosHeaders(), {});
+  t.deepEqual(createAxiosHeaders({ 'undefined': undefined }), {});
 });
 
-test('createAxiosHeaders will format a Headers object for Axios', (t) => {
+test('createAxiosHeaders will format fetch style Headers object for Axios', (t) => {
   t.deepEqual(createAxiosHeaders(headersClass), headersObject);
 });
 

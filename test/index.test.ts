@@ -1,10 +1,12 @@
 import test from 'ava';
 import nock from 'nock';
-import fetch, { RequestInit } from 'node-fetch';
+import fetch, {
+  RequestInit as NodeRequestInit
+} from 'node-fetch';
 import { buildAxiosFetch } from '../src';
 import axios, { AxiosInstance, AxiosPromise, AxiosRequestConfig } from 'axios';
 import sinon from 'sinon';
-import FormData from 'form-data';
+import NodeFormData from 'form-data';
 
 const TEST_URL_ROOT = 'https://localhost:1234';
 
@@ -53,7 +55,7 @@ test.before(() => {
 });
 
 async function dualFetch (input: string, init: RequestInit = {}) {
-  const expectedResponse = await fetch(input, init);
+  const expectedResponse = await fetch(input, init as NodeRequestInit);
   const axiosFetch = buildAxiosFetch(axios);
   const axiosResponse = await axiosFetch(input, init);
 
@@ -74,7 +76,7 @@ test('returns the expected response on a JSON body', async (test) => {
   const expectedBody = await expectedResponse.json();
   const axiosBody = await axiosResponse.json();
   test.deepEqual(axiosBody, expectedBody);
-  test.deepEqual(axiosResponse.headers, expectedResponse.headers);
+  test.deepEqual(axiosResponse.headers, expectedResponse.headers as any);
 });
 
 test('returns the expected response on a text body', async (test) => {
@@ -83,7 +85,7 @@ test('returns the expected response on a text body', async (test) => {
   const expectedBody = await expectedResponse.text();
   const axiosBody = await axiosResponse.text();
   test.deepEqual(axiosBody, expectedBody);
-  test.deepEqual(axiosResponse.headers, expectedResponse.headers);
+  test.deepEqual(axiosResponse.headers, expectedResponse.headers as any);
 });
 
 test('respects the headers init option', async (test) => {
@@ -176,21 +178,21 @@ test('handles undefined body in init options', async (test) => {
 });
 
 test('returns the expected response on a multipart request', async (test) => {
-  const data = new FormData();
+  const data = new NodeFormData();
   data.append('key', 'value');
   const init: RequestInit = {
     method: 'POST',
-    body: data
+    body: data as unknown as FormData
   };
 
   const input = `${TEST_URL_ROOT}/body`;
-  const expectedResponse = await fetch(input, init);
+  const expectedResponse = await fetch(input, init as NodeRequestInit);
 
   // FormData is a stream in Node, so you can't reuse it. Make a copy instead.
-  const dataCopy = new FormData() as FormData & { _boundary: string };
+  const dataCopy = new NodeFormData() as NodeFormData & { _boundary: string };
   dataCopy._boundary = data.getBoundary();
   dataCopy.append('key', 'value');
-  init.body = dataCopy;
+  init.body = dataCopy as unknown as FormData;
 
   const axiosFetch = buildAxiosFetch(axios);
   const axiosResponse = await axiosFetch(input, init);
@@ -215,7 +217,7 @@ test('returns the expected response body on a failure', async (test) => {
   const expectedBody = await expectedResponse.text();
   const axiosBody = await axiosResponse.text();
   test.deepEqual(axiosBody, expectedBody);
-  test.deepEqual(axiosResponse.headers, expectedResponse.headers);
+  test.deepEqual(axiosResponse.headers, expectedResponse.headers as any);
 });
 
 test('throws the original error on a network error', async (test) => {

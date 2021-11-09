@@ -3,4 +3,5 @@ node_modules/
 .idea/
 src/**/*.js
 src/**/*.d.ts
+!src/axios-types.d.ts
 test/**/*.js

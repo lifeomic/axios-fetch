@@ -1,6 +1,9 @@
-import { Response, RequestInfo, RequestInit } from 'node-fetch';
-import { createAxiosHeaders, createFetchHeaders, getUrl } from './typeUtils';
-import { AxiosInstance, AxiosRequestConfig } from 'axios';
+import {
+  createAxiosHeaders,
+  createFetchHeaders,
+  getUrl
+} from './typeUtils';
+import { AxiosInstance, AxiosRequestConfig } from './axios-types';
 
 export type AxiosTransformer<Init extends RequestInit = RequestInit> = (config: AxiosRequestConfig, input: RequestInfo, init?: Init) => AxiosRequestConfig;
 
