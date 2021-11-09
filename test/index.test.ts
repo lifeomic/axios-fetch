@@ -1,12 +1,16 @@
 import test from 'ava';
 import nock from 'nock';
 import fetch, {
+  Response,
   RequestInit as NodeRequestInit
 } from 'node-fetch';
 import { buildAxiosFetch } from '../src';
 import axios, { AxiosInstance, AxiosPromise, AxiosRequestConfig } from 'axios';
 import sinon from 'sinon';
 import NodeFormData from 'form-data';
+
+// @ts-expect-error this is a polyfill, not exact match.
+global.Response = Response;
 
 const TEST_URL_ROOT = 'https://localhost:1234';
 

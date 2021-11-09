@@ -5,7 +5,8 @@ import {
 } from './typeUtils';
 import { AxiosInstance, AxiosRequestConfig } from './axios-types';
 
-export type AxiosTransformer<Init extends RequestInit = RequestInit> = (config: AxiosRequestConfig, input: RequestInfo, init?: Init) => AxiosRequestConfig;
+export type AxiosTransformer<Init extends RequestInit = RequestInit> =
+  (config: AxiosRequestConfig, input: RequestInfo, init?: Init) => AxiosRequestConfig;
 
 /**
  * A Fetch WebAPI implementation based on the Axios client
@@ -67,6 +68,7 @@ const axiosFetch = <Init extends RequestInit = RequestInit>(
     });
   };
 
-export function buildAxiosFetch<Init extends RequestInit = RequestInit> (axios: AxiosInstance, transformer?: AxiosTransformer<Init>) {
-  return axiosFetch(axios, transformer);
-}
+export const buildAxiosFetch = <Init extends RequestInit = RequestInit> (
+  axios: AxiosInstance,
+  transformer?: AxiosTransformer<Init>
+) => axiosFetch(axios, transformer);
