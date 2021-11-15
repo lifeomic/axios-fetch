@@ -13,7 +13,7 @@
     "strictFunctionTypes": true,
     "moduleResolution": "node",
     "target": "es2017",
-    "lib": ["es2020", "esnext.asynciterable"],
+    "lib": ["es2020", "esnext.asynciterable", "dom"],
     "pretty": true,
     "inlineSourceMap": true,
     "inlineSources": true,

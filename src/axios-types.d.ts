@@ -1,4 +1,5 @@
-// Copied and edited from axios@0.21.1 because types aren't available in version 0.17
+/* eslint-disable */
+// Copied and edited from axios@0.21.1
 
 export type Method =
   | 'get' | 'GET'
