@@ -1,10 +1,10 @@
 import test from 'ava';
+import { Headers as NodeHeaders, Request } from 'node-fetch';
 import {
   createAxiosHeaders,
   createFetchHeaders,
   getUrl
 } from '../src/typeUtils';
-import { Request, Headers as NodeHeaders } from 'node-fetch';
 
 const headersObject = {
   key1: 'value1',
@@ -38,6 +38,10 @@ test('createFetchHeaders will create a proper Headers object', (t) => {
 test('createAxiosHeaders will return an empty object on undefined', (t) => {
   t.deepEqual(createAxiosHeaders(), {});
   t.deepEqual(createAxiosHeaders({ 'undefined': undefined }), {});
+});
+
+test('createAxiosHeaders will work with Headers object without a prototype', (t) => {
+  t.deepEqual(createAxiosHeaders(Object.create(null)), {});
 });
 
 test('createAxiosHeaders will format fetch style Headers object for Axios', (t) => {
