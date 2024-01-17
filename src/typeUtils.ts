@@ -7,8 +7,8 @@ export type UrlLike = string | {
   url?: string;
 }
 
-export function createFetchHeaders (axiosHeaders: Record<string, string> = {}): string[][] {
-  const headers: string[][] = [];
+export function createFetchHeaders (axiosHeaders: Record<string, string> = {}): [string, string][] {
+  const headers: [string, string][] = [];
   Object.entries(axiosHeaders).forEach(([name, value]) => {
     headers.push([name, value]);
   });
