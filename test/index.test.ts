@@ -50,6 +50,8 @@ test.before(() => {
         body
       };
     })
+    .get('/no-content')
+    .reply(204)
     .get('/failure')
     .reply(501)
     .get('/failureBody')
@@ -90,6 +92,15 @@ test('returns the expected response on a text body', async (test) => {
   const axiosBody = await axiosResponse.text();
   test.deepEqual(axiosBody, expectedBody);
   test.deepEqual(axiosResponse.headers, expectedResponse.headers as any);
+});
+
+test('returns the expected response on HTTP status code no-content', async (test) => {
+  const { expectedResponse, axiosResponse } = await dualFetch(`${TEST_URL_ROOT}/no-content`);
+
+  test.truthy(axiosResponse.ok === expectedResponse.ok);
+  test.truthy(axiosResponse.status === expectedResponse.status);
+
+  test.truthy(axiosResponse.body === null);
 });
 
 test('respects the headers init option', async (test) => {

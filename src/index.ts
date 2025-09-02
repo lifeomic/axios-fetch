@@ -1,7 +1,8 @@
 import {
   createAxiosHeaders,
   createFetchHeaders,
-  getUrl
+  getUrl,
+  isBuffer
 } from './typeUtils';
 import { AxiosInstance, AxiosRequestConfig } from './axios-types';
 
@@ -54,7 +55,10 @@ const axiosFetch = <Init extends RequestInit = RequestInit>(
       }
     }
 
-    return new Response(result.data, {
+    const data = result.data as unknown;
+    const body = isBuffer(data) && !data.length ? null : result.data;
+
+    return new Response(body, {
       status: result.status,
       statusText: result.statusText,
       headers: createFetchHeaders(result.headers)
