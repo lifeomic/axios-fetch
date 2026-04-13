@@ -17,6 +17,10 @@ export function createFetchHeaders (axiosHeaders: Record<string, string> = {}): 
 
 const isHeaders = (headers: HeadersLike): headers is Headers => headers.constructor?.name === 'Headers';
 
+export function isBuffer (input: unknown): input is Buffer {
+  return Buffer.isBuffer(input);
+}
+
 export function createAxiosHeaders (headers: HeadersLike = {}): Record<string, string> {
   const rawHeaders: Record<string, string> = {};
 
